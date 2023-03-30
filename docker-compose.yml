@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./services/web
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./services/web/:$HOME/geoApp
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgis/postgis:13-master
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=carto
+      - POSTGRES_PASSWORD=carto
+      - POSTGRES_DB=carto_dev
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data:
